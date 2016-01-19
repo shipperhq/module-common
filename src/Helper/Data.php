@@ -47,7 +47,9 @@ class Data extends  \Magento\Framework\App\Helper\AbstractHelper
     protected $moduleManager;
 
 
-    function __construct(\Magento\Framework\Module\Manager $moduleManager) {
+    function __construct(\Magento\Framework\Module\Manager $moduleManager,
+                         \Magento\Framework\App\Helper\Context $context) {
+        parent::__construct($context);
         $this->moduleManager = $moduleManager;
     }
 
@@ -61,6 +63,19 @@ class Data extends  \Magento\Framework\App\Helper\AbstractHelper
         }
 
         return true;
+    }
+
+    /**
+     * Get Config Value
+     *
+     * @param $configField
+     * @return mixed
+     */
+    public function getConfigValue($configField)
+    {
+        return $this->scopeConfig->getValue($configField,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+
     }
 
 }

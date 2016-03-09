@@ -41,27 +41,15 @@ namespace ShipperHQ\Common\Helper;
 class Data extends  \Magento\Framework\App\Helper\AbstractHelper
 {
 
-    /**
-     * @var \Magento\Framework\Module\Manager
-     */
-    protected $moduleManager;
-
-
-    function __construct(\Magento\Framework\Module\Manager $moduleManager,
-                         \Magento\Framework\App\Helper\Context $context) {
+    function __construct(\Magento\Framework\App\Helper\Context $context) {
         parent::__construct($context);
-        $this->moduleManager = $moduleManager;
     }
-
-
-
 
     public function isEnterpriseEdition() {
 
         if (!$this->_moduleManager->isEnabled('Enterprise_Cms')) {
             return false;
         }
-
         return true;
     }
 

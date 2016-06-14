@@ -31,9 +31,9 @@
  * Copyright © 2015 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace ShipperHQ\Common\Model\Calendar;
+namespace ShipperHQ\Common\Model\Checkout;
 
-use ShipperHQ\Lib\Calendar\AbstractService;
+use ShipperHQ\Lib\Checkout\AbstractService;
 
 /**
  * Class Service
@@ -77,9 +77,8 @@ class Service extends AbstractService
     public function saveSelectedData($data)
     {
         $requestData = $this->checkoutSession->getShipperhqData();
-        //TODO need a map so the request always uses the data in known structure
-
-        $requestData['selected_delivery'] = $data;
+      //  $key = $this->getKey($data);
+        $requestData['checkout_selections'] = $data;
         $this->checkoutSession->setShipperhqData($requestData);
     }
     /*
@@ -116,6 +115,17 @@ class Service extends AbstractService
 
         return $rates;
     }
+    /*
+     * Removed cached data selected at checkout
+     */
+    public function cleanDownSelectedData()
+    {
+        $requestData = $this->checkoutSession->getShipperhqData();
+        //  $key = $this->getKey($data);
+        $requestData['checkout_selections'] = [];
+        $this->checkoutSession->setShipperhqData($requestData);
+    }
+
 
     protected function getAddress($addressId = false)
     {

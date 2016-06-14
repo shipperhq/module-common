@@ -42,9 +42,9 @@ use ShipperHQ\Lib\Calendar\BaseCalendar;
  */
 class Calendar extends BaseCalendar
 {
-   public function __construct(Calendar\Service $calendarService)
+   public function __construct(Checkout\Service $checkoutSerice)
    {
-       parent::__construct($calendarService);
+       parent::__construct($checkoutSerice);
    }
 
 }

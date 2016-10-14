@@ -33,7 +33,7 @@
  */
 namespace ShipperHQ\Common\Model;
 
-use ShipperHQ\Lib\Type\BaseCalendar;
+use ShipperHQ\Lib\Type\BasePickup;
 use Magento\Framework\Stdlib\DateTime;
 
 /**
@@ -41,28 +41,27 @@ use Magento\Framework\Stdlib\DateTime;
  *
  * @package ShipperHQ_Common
  */
-class Calendar extends BaseCalendar
+class Pickup extends BasePickup
 {
     /**
      * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
      */
-     protected $localeDate;
+    protected $localeDate;
 
     /*
      * @param DateTime\TimezoneInterface $localeDate
      */
-     public function __construct(DateTime\TimezoneInterface $localeDate, Checkout\Service $checkoutService)
-     {
-         $this->localeDate = $localeDate;
-         parent::__construct($checkoutService);
-     }
+    public function __construct(DateTime\TimezoneInterface $localeDate, Checkout\Service $checkoutService)
+    {
+        $this->localeDate = $localeDate;
+        parent::__construct($checkoutService);
+    }
 
-    public function processCalendarDetails($carrierRate, $carrierGroupDetail)
-     {
-         $calendarDetails = parent::processCalendarDetails($carrierRate, $carrierGroupDetail);
-         //transform for current locale
-         $calendarDetails['start'] = $this->localeDate->date($calendarDetails['start'], null, true)->getTimestamp();
-         return $calendarDetails;
-     }
+    public function processPickupDetails($carrierRate, $carrierGroupDetail)
+    {
+        $pickupDetails = parent::processPickupDetails($carrierRate, $carrierGroupDetail);
+        //transform for current locale
+        return $pickupDetails;
+    }
 
 }

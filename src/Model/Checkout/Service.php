@@ -53,6 +53,12 @@ class Service extends AbstractService
      * @var \Magento\Quote\Api\CartRepositoryInterface
      */
     protected $quoteRepository;
+    /**
+     * Shipping method converter
+     *
+     * @var \Magento\Quote\Model\Cart\ShippingMethodConverter
+     */
+    protected $converter;
 
     protected $address;
 
@@ -65,10 +71,12 @@ class Service extends AbstractService
      */
     public function __construct(
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Magento\Checkout\Model\Session $checkoutSession
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Quote\Model\Cart\ShippingMethodConverter $converter
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->checkoutSession = $checkoutSession;
+        $this->converter = $converter;
     }
 
     /*
@@ -88,7 +96,8 @@ class Service extends AbstractService
     {
         $currentRates = $this->getAddress($addressId)->getGroupedAllShippingRates();
         foreach ($currentRates as $code => $rates) {
-            if ($code == $carrierCode) {
+            //prevent duplicate rates from non-SHQ carriers if enabled
+            if ($code == $carrierCode || !strstr($code, 'shq')) {
                 foreach ($rates as $rate) {
                     if ($carriergroupId == '' || $rate->getCarriergroupId() == $carriergroupId) {
                         $rate->isDeleted(true);
@@ -112,9 +121,29 @@ class Service extends AbstractService
         $rateFound = $address->requestShippingRates();
         $address->save();
         $rates = $address->getGroupedAllShippingRates();
+        $quote = $this->checkoutSession->getQuote();
 
-        return $rates;
+        foreach ($rates as $carrierRates) {
+            foreach ($carrierRates as $rate) {
+                $rateObject = $this->converter->modelToDataObject($rate, $quote->getQuoteCurrencyCode());
+                //mimicking output format from serviceOutputProcessor->process(... (API stuff)
+                $oneRate = ['carrier_code' => $rateObject->getCarrierCode(),
+                            'method_code' => $rateObject->getMethodCode(),
+                            'carrier_title' => $rateObject->getCarrierTitle(),
+                            'method_title' => $rateObject->getMethodTitle(),
+                            'amount'    => $rateObject->getAmount(),
+                            'base_amount' => $rateObject->getBaseAmount(),
+                            'available' => $rateObject->getAvailable(),
+                            'error_message' => $rateObject->getErrorMessage(),
+                            'price_excl_tax' => $rateObject->getPriceExclTax(),
+                            'price_incl_tax' => $rateObject->getPriceInclTax()];
+
+                $output[] = $oneRate;
+            }
+        }
+        return $output;
     }
+
     /*
      * Removed cached data selected at checkout
      */
@@ -122,7 +151,7 @@ class Service extends AbstractService
     {
         $requestData = $this->checkoutSession->getShipperhqData();
         //  $key = $this->getKey($data);
-        $requestData['checkout_selections'] = [];
+        unset($requestData['checkout_selections']);
         $this->checkoutSession->setShipperhqData($requestData);
     }
 

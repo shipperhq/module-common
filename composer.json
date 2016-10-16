@@ -2,7 +2,6 @@
     "name": "shipperhq/module-common",
     "description": "ShipperHQ Common",
     "type": "magento2-module",
-    "version": "20.0.5",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
@@ -27,6 +26,11 @@
         ],
         "psr-4": {
             "ShipperHQ\\Common\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ShipperHQ\\Common\\Test\\": "tests/unit/"
         }
     }
 }

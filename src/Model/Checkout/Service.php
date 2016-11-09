@@ -61,6 +61,7 @@ class Service extends AbstractService
     protected $converter;
 
     protected $address;
+    protected $quote;
 
     /**
      * @param Context $context
@@ -117,15 +118,17 @@ class Service extends AbstractService
         //        $address->setFreeMethodWeight(Mage::getSingleton('checkout/session')->getFreemethodWeight());
         //    }
 
+        if(!$this->quote) {
+            $this->quote = $this->checkoutSession->getQuote();
+        }
         $address = $this->getAddress();
         $rateFound = $address->requestShippingRates();
         $address->save();
         $rates = $address->getGroupedAllShippingRates();
-        $quote = $this->checkoutSession->getQuote();
 
         foreach ($rates as $carrierRates) {
             foreach ($carrierRates as $rate) {
-                $rateObject = $this->converter->modelToDataObject($rate, $quote->getQuoteCurrencyCode());
+                $rateObject = $this->converter->modelToDataObject($rate, $this->quote->getQuoteCurrencyCode());
                 //mimicking output format from serviceOutputProcessor->process(... (API stuff)
                 $oneRate = ['carrier_code' => $rateObject->getCarrierCode(),
                             'method_code' => $rateObject->getMethodCode(),
@@ -169,10 +172,10 @@ class Service extends AbstractService
 //        }
 
         if(is_null($this->address)) {
-            //$cartId = $this->checkoutSession->getQuote()->getId();
-            //$quote = $this->quoteRepository->getActive($cartId);
-            $quote = $this->checkoutSession->getQuote();
-            $this->address = $quote->getShippingAddress();
+            if(!$this->quote) {
+                $this->quote = $this->checkoutSession->getQuote();
+            }
+            $this->address = $this->quote->getShippingAddress();
         }
         return $this->address;
     }

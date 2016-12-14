@@ -59,25 +59,31 @@ class Service extends AbstractService
      * @var \Magento\Quote\Model\Cart\ShippingMethodConverter
      */
     protected $converter;
+    /**
+     * @var \ShipperHQ\Shipper\Helper\LogAssist
+     */
+    private $shipperLogger;
 
     protected $address;
     protected $quote;
 
     /**
-     * @param Context $context
-     * @param Sidebar $sidebar
-     * @param LoggerInterface $logger
-     * @param Data $jsonHelper
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Quote\Model\Cart\ShippingMethodConverter $converter
+     * @param \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
      * @codeCoverageIgnore
      */
     public function __construct(
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Magento\Quote\Model\Cart\ShippingMethodConverter $converter
+        \Magento\Quote\Model\Cart\ShippingMethodConverter $converter,
+        \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->checkoutSession = $checkoutSession;
         $this->converter = $converter;
+        $this->shipperLogger = $shipperLogger;
     }
 
     /*
@@ -93,9 +99,10 @@ class Service extends AbstractService
     /*
      * Remove carrier shipping rates before re-requesting
      */
-    public function cleanDownRates($carrierCode, $carriergroupId, $addressId = false)
+    public function cleanDownRates($cartId, $carrierCode, $carriergroupId, $addressId = false)
     {
-        $currentRates = $this->getAddress($addressId)->getGroupedAllShippingRates();
+        $currentRates = $this->getAddress($cartId, $addressId)->getGroupedAllShippingRates();
+
         foreach ($currentRates as $code => $rates) {
             //prevent duplicate rates from non-SHQ carriers if enabled
             if ($code == $carrierCode || !strstr($code, 'shq')) {
@@ -105,30 +112,27 @@ class Service extends AbstractService
                     }
                 }
             }
-
         }
     }
+
     /*
      * Request shipping rates for specified carrier
      */
-    public function reqeustShippingRates($carrierCode, $carriergroupId, $addressId = false)
+    public function reqeustShippingRates($cartId, $carrierCode, $carriergroupId, $addressData, $addressId = false)
     {
         // if (empty($this->_rates)) {
         //    if(!$address->getFreeMethodWeight()) {
         //        $address->setFreeMethodWeight(Mage::getSingleton('checkout/session')->getFreemethodWeight());
         //    }
 
-        if(!$this->quote) {
-            $this->quote = $this->checkoutSession->getQuote();
-        }
-        $address = $this->getAddress();
+        $address = $this->getAddress($cartId, $addressId);
+        $address->addData($addressData);
         $rateFound = $address->requestShippingRates();
-        $address->save();
         $rates = $address->getGroupedAllShippingRates();
 
         foreach ($rates as $carrierRates) {
             foreach ($carrierRates as $rate) {
-                $rateObject = $this->converter->modelToDataObject($rate, $this->quote->getQuoteCurrencyCode());
+                $rateObject = $this->converter->modelToDataObject($rate, $this->getQuote($cartId)->getQuoteCurrencyCode());
                 //mimicking output format from serviceOutputProcessor->process(... (API stuff)
                 $oneRate = ['carrier_code' => $rateObject->getCarrierCode(),
                             'method_code' => $rateObject->getMethodCode(),
@@ -158,9 +162,33 @@ class Service extends AbstractService
         $this->checkoutSession->setShipperhqData($requestData);
     }
 
-
-    protected function getAddress($addressId = false)
+    protected function saveShippingAddress($cartId, $addressId)
     {
+        $address = $this->getAddress($cartId, $addressId);
+        $region = $address->getRegion();
+        if(!is_null($region) && $region instanceof \Magento\Customer\Model\Data\Region) {
+            $regionString = $region->getRegion();
+            $address->setRegion($regionString);
+        }
+        try {
+            $address->save();
+        }
+        catch(\Exception $e) {
+            $this->shipperLogger->postCritical('Shipperhq_Shipper', 'Exception raised whilst saving shipping address',
+                $e->getMessage());
+        }
+    }
+
+
+    protected function getAddress($cartId, $addressId = false)
+    {
+
+        if(is_null($this->address)) {
+            if(!$this->quote) {
+                $this->quote = $this->getQuote($cartId);
+            }
+            $this->address = $this->quote->getShippingAddress();
+        }
         //TODO multiaddress checkout support
 //        if($addressId) {
 //            $allShipAddress = $this->quote->getAllShippingAddresses();
@@ -171,13 +199,15 @@ class Service extends AbstractService
 //            }
 //        }
 
-        if(is_null($this->address)) {
-            if(!$this->quote) {
-                $this->quote = $this->checkoutSession->getQuote();
-            }
-            $this->address = $this->quote->getShippingAddress();
-        }
         return $this->address;
+    }
+
+    protected function getQuote($cartId)
+    {
+        if(!$this->quote) {
+            $this->quote = $this->quoteRepository->getActive($cartId);
+        }
+        return $this->quote;
     }
 
 }

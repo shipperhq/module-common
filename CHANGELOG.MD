@@ -1,27 +1,5 @@
 # Change Log
 
-## [20.1.2](https://github.com/webshopapps/module-common/tree/20.1.2) (2016-12-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.3...20.1.2)
-
-## [20.1.3](https://github.com/webshopapps/module-common/tree/20.1.3) (2016-12-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.1...20.1.3)
-
-## [20.1.1](https://github.com/webshopapps/module-common/tree/20.1.1) (2016-11-09)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.0...20.1.1)
-
-## [20.1.0](https://github.com/webshopapps/module-common/tree/20.1.0) (2016-10-19)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.0.12...20.1.0)
-
-**Merged pull requests:**
-
-- Develop [\#2](https://github.com/webshopapps/module-common/pull/2) ([wsajason](https://github.com/wsajason))
-
-## [20.0.12](https://github.com/webshopapps/module-common/tree/20.0.12) (2016-10-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.0.11...20.0.12)
-
-## [20.0.11](https://github.com/webshopapps/module-common/tree/20.0.11) (2016-08-18)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.0.6...20.0.11)
-
 ## [20.0.6](https://github.com/webshopapps/module-common/tree/20.0.6) (2016-08-16)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.0.10...20.0.6)
 
@@ -29,19 +7,19 @@
 [Full Changelog](https://github.com/webshopapps/module-common/compare/1.2.5...20.0.10)
 
 ## [1.2.5](https://github.com/webshopapps/module-common/tree/1.2.5) (2016-03-09)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/1.2.1...1.2.5)
-
-## [1.2.1](https://github.com/webshopapps/module-common/tree/1.2.1) (2016-03-09)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/1.2.4...1.2.1)
-
-## [1.2.4](https://github.com/webshopapps/module-common/tree/1.2.4) (2016-03-09)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/1.2.3...1.2.4)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/1.2.3...1.2.5)
 
 ## [1.2.3](https://github.com/webshopapps/module-common/tree/1.2.3) (2016-03-09)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/1.2.2...1.2.3)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/1.2.1...1.2.3)
+
+## [1.2.1](https://github.com/webshopapps/module-common/tree/1.2.1) (2016-03-09)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/1.2.2...1.2.1)
 
 ## [1.2.2](https://github.com/webshopapps/module-common/tree/1.2.2) (2016-03-09)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/1.1.0...1.2.2)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/1.2.4...1.2.2)
+
+## [1.2.4](https://github.com/webshopapps/module-common/tree/1.2.4) (2016-03-09)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/1.1.0...1.2.4)
 
 ## [1.1.0](https://github.com/webshopapps/module-common/tree/1.1.0) (2016-01-25)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/1.0.0...1.1.0)

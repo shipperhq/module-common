@@ -46,23 +46,22 @@ class Calendar extends BaseCalendar
     /**
      * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
      */
-     protected $localeDate;
+    protected $localeDate;
 
     /*
      * @param DateTime\TimezoneInterface $localeDate
      */
-     public function __construct(DateTime\TimezoneInterface $localeDate, Checkout\Service $checkoutService)
-     {
-         $this->localeDate = $localeDate;
-         parent::__construct($checkoutService);
-     }
+    public function __construct(DateTime\TimezoneInterface $localeDate, Checkout\Service $checkoutService)
+    {
+        $this->localeDate = $localeDate;
+        parent::__construct($checkoutService);
+    }
 
     public function processCalendarDetails($carrierRate, $carrierGroupDetail)
-     {
+    {
          $calendarDetails = parent::processCalendarDetails($carrierRate, $carrierGroupDetail);
          //transform for current locale
          $calendarDetails['start'] = $this->localeDate->date($calendarDetails['start'], null, true)->getTimestamp();
          return $calendarDetails;
-     }
-
+    }
 }

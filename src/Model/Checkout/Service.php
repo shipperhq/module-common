@@ -92,7 +92,6 @@ class Service extends AbstractService
     public function saveSelectedData($data)
     {
         $requestData = $this->checkoutSession->getShipperhqData();
-      //  $key = $this->getKey($data);
         $requestData['checkout_selections'] = $data;
         $this->checkoutSession->setShipperhqData($requestData);
     }
@@ -120,11 +119,6 @@ class Service extends AbstractService
      */
     public function reqeustShippingRates($cartId, $carrierCode, $carriergroupId, $addressData, $addressId = false)
     {
-        // if (empty($this->_rates)) {
-        //    if(!$address->getFreeMethodWeight()) {
-        //        $address->setFreeMethodWeight(Mage::getSingleton('checkout/session')->getFreemethodWeight());
-        //    }
-
         $address = $this->getAddress($cartId, $addressId);
         $address->addData($addressData);
         $rateFound = $address->requestShippingRates();
@@ -132,7 +126,10 @@ class Service extends AbstractService
 
         foreach ($rates as $carrierRates) {
             foreach ($carrierRates as $rate) {
-                $rateObject = $this->converter->modelToDataObject($rate, $this->getQuote($cartId)->getQuoteCurrencyCode());
+                $rateObject = $this->converter->modelToDataObject(
+                    $rate,
+                    $this->getQuote($cartId)->getQuoteCurrencyCode()
+                );
                 //mimicking output format from serviceOutputProcessor->process(... (API stuff)
                 $oneRate = ['carrier_code' => $rateObject->getCarrierCode(),
                             'method_code' => $rateObject->getMethodCode(),
@@ -157,7 +154,6 @@ class Service extends AbstractService
     public function cleanDownSelectedData()
     {
         $requestData = $this->checkoutSession->getShipperhqData();
-        //  $key = $this->getKey($data);
         unset($requestData['checkout_selections']);
         $this->checkoutSession->setShipperhqData($requestData);
     }
@@ -166,25 +162,26 @@ class Service extends AbstractService
     {
         $address = $this->getAddress($cartId, $addressId);
         $region = $address->getRegion();
-        if(!is_null($region) && $region instanceof \Magento\Customer\Model\Data\Region) {
+        if ($region !== null && $region instanceof \Magento\Customer\Model\Data\Region) {
             $regionString = $region->getRegion();
             $address->setRegion($regionString);
         }
         try {
             $address->save();
-        }
-        catch(\Exception $e) {
-            $this->shipperLogger->postCritical('Shipperhq_Shipper', 'Exception raised whilst saving shipping address',
-                $e->getMessage());
+        } catch (\Exception $e) {
+            $this->shipperLogger->postCritical(
+                'Shipperhq_Shipper',
+                'Exception raised whilst saving shipping address',
+                $e->getMessage()
+            );
         }
     }
-
 
     protected function getAddress($cartId, $addressId = false)
     {
 
-        if(is_null($this->address)) {
-            if(!$this->quote) {
+        if ($this->address === null) {
+            if (!$this->quote) {
                 $this->quote = $this->getQuote($cartId);
             }
             $this->address = $this->quote->getShippingAddress();
@@ -204,10 +201,9 @@ class Service extends AbstractService
 
     protected function getQuote($cartId)
     {
-        if(!$this->quote) {
+        if (!$this->quote) {
             $this->quote = $this->quoteRepository->getActive($cartId);
         }
         return $this->quote;
     }
-
 }

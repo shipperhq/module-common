@@ -58,5 +58,4 @@ interface ConfigInterface
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function getCodes();
-
 }

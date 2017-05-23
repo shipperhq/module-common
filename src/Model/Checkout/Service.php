@@ -100,6 +100,9 @@ class Service extends AbstractService
      */
     public function cleanDownRates($cartId, $carrierCode, $carriergroupId, $addressId = false)
     {
+        if(is_null($cartId)) {
+            return;
+        }
         $currentRates = $this->getAddress($cartId, $addressId)->getGroupedAllShippingRates();
 
         foreach ($currentRates as $code => $rates) {

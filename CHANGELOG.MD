@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- SHQ16-1967 Support for accessorials [\#7](https://github.com/webshopapps/module-common/pull/7) ([wsagen](https://github.com/wsagen))
 - SHQ16-2029 changes from code sniffer review [\#6](https://github.com/webshopapps/module-common/pull/6) ([wsagen](https://github.com/wsagen))
 - SHQ16-2041 extended unit tests [\#5](https://github.com/webshopapps/module-common/pull/5) ([wsagen](https://github.com/wsagen))
 - SHQ16-2032 updated unit test [\#4](https://github.com/webshopapps/module-common/pull/4) ([wsagen](https://github.com/wsagen))

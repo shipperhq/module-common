@@ -1,5 +1,12 @@
 # Change Log
 
+## [20.1.6](https://github.com/webshopapps/module-common/tree/20.1.6) (2017-08-07)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.5...20.1.6)
+
+**Merged pull requests:**
+
+- SHQ16-2178 set address type from customer address on to shipping addr… [\#9](https://github.com/webshopapps/module-common/pull/9) ([wsagen](https://github.com/wsagen))
+
 ## [20.1.5](https://github.com/webshopapps/module-common/tree/20.1.5) (2017-06-01)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.4...20.1.5)
 
@@ -13,13 +20,13 @@
 - SHQ16-2004 admin shipping [\#3](https://github.com/webshopapps/module-common/pull/3) ([wsagen](https://github.com/wsagen))
 
 ## [20.1.4](https://github.com/webshopapps/module-common/tree/20.1.4) (2017-02-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.2...20.1.4)
-
-## [20.1.2](https://github.com/webshopapps/module-common/tree/20.1.2) (2016-12-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.3...20.1.2)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.3...20.1.4)
 
 ## [20.1.3](https://github.com/webshopapps/module-common/tree/20.1.3) (2016-12-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.1...20.1.3)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.2...20.1.3)
+
+## [20.1.2](https://github.com/webshopapps/module-common/tree/20.1.2) (2016-12-14)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.1...20.1.2)
 
 ## [20.1.1](https://github.com/webshopapps/module-common/tree/20.1.1) (2016-11-09)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.0...20.1.1)

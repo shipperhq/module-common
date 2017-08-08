@@ -53,15 +53,24 @@ class ShippingMethodManagementPlugin
      * @var \ShipperHQ\Shipper\Helper\LogAssist
      */
     private $shipperLogger;
+    /**
+     * Customer Address repository
+     *
+     * @var \Magento\Customer\Api\AddressRepositoryInterface
+     */
+    private $addressRepository;
 
     public function __construct(
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
+        \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger,
+        \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->checkoutSession = $checkoutSession;
         $this->shipperLogger = $shipperLogger;
+        $this->addressRepository = $addressRepository;
+
     }
 
     /**
@@ -98,6 +107,38 @@ class ShippingMethodManagementPlugin
         $result = $proceed($cartId, $address);
         $this->saveShippingAddress($cartId);
         return $result;
+    }
+
+    /**
+     *Add customers address type to shipping address on quote
+     *
+     * @param \Magento\Quote\Model\ShippingMethodManagement $subject
+     * @param callable $proceed
+     * @param $cartId
+     * @param int $addressId
+     * @return \Magento\Quote\Api\Data\ShippingMethodInterface[]
+     *
+     */
+    public function aroundEstimateByAddressId(\Magento\Quote\Model\ShippingMethodManagement $subject, $proceed, $cartId, $addressId)
+    {
+        /** @var \Magento\Quote\Model\Quote $quote */
+        $quote = $this->quoteRepository->getActive($cartId);
+
+        // no methods applicable for empty carts or carts with virtual products
+        if ($quote->isVirtual() || 0 == $quote->getItemsCount()) {
+            return $proceed($cartId, $addressId);
+        }
+        $address = $this->addressRepository->getById($addressId);
+
+        if($custom = $address->getCustomAttributes()) {
+            foreach ($custom as $custom_attribute) {
+                if($custom_attribute->getAttributeCode() == 'destination_type') {
+                    $quote->getShippingAddress()->setData('destination_type', $custom_attribute->getValue());
+                }
+            }
+        }
+
+        return $proceed($cartId, $addressId);
     }
 
     protected function saveShippingAddress($cartId)

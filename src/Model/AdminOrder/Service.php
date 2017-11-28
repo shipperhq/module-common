@@ -31,9 +31,9 @@
  * Copyright © 2015 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace ShipperHQ\Common\Model\Checkout;
+namespace ShipperHQ\Common\Model\AdminOrder;
 
-use ShipperHQ\Lib\Checkout\AbstractService;
+use ShipperHQ\Lib\AdminOrder\AbstractService;
 
 /**
  * Class Service
@@ -43,16 +43,15 @@ use ShipperHQ\Lib\Checkout\AbstractService;
 class Service extends AbstractService
 {
     /**
-     * @var \Magento\Checkout\Model\Session
-     */
-    protected $checkoutSession;
-
-    /**
      * Quote repository.
      *
-     * @var \Magento\Quote\Api\CartRepositoryInterface
+     * @var \Magento\Backend\Model\Session\Quote
      */
-    protected $quoteRepository;
+    protected $quote;
+    /**
+     * @var \Magento\Backend\Model\Session
+     */
+    protected $adminSession;
     /**
      * Shipping method converter
      *
@@ -65,23 +64,22 @@ class Service extends AbstractService
     private $shipperLogger;
 
     protected $address;
-    protected $quote;
 
     /**
-     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
-     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Backend\Model\Session\Quote $quote
+     * @param \Magento\Backend\Model\Session $adminSession
      * @param \Magento\Quote\Model\Cart\ShippingMethodConverter $converter
      * @param \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
      * @codeCoverageIgnore
      */
     public function __construct(
-        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Backend\Model\Session\Quote $quote,
+        \Magento\Backend\Model\Session $adminSession,
         \Magento\Quote\Model\Cart\ShippingMethodConverter $converter,
         \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
     ) {
-        $this->quoteRepository = $quoteRepository;
-        $this->checkoutSession = $checkoutSession;
+        $this->quote = $quote;
+        $this->adminSession = $adminSession;
         $this->converter = $converter;
         $this->shipperLogger = $shipperLogger;
     }
@@ -91,19 +89,20 @@ class Service extends AbstractService
      */
     public function saveSelectedData($data)
     {
-        $requestData = $this->checkoutSession->getShipperhqData();
+        //Beware of type here - we must use the quote as this matches where data is retrieved for admin orders
+        $requestData = $this->quote->getShipperhqData();
         $requestData['checkout_selections'] = $data;
-        $this->checkoutSession->setShipperhqData($requestData);
+        $this->quote->setShipperhqData($requestData);
     }
     /*
      * Remove carrier shipping rates before re-requesting
      */
-    public function cleanDownRates($cartId, $carrierCode, $carriergroupId, $addressId = false)
+    public function cleanDownRates($cartId, $carrierCode, $carriergroupId)
     {
         if(is_null($cartId)) {
             return;
         }
-        $currentRates = $this->getAddress($cartId, $addressId)->getGroupedAllShippingRates();
+        $currentRates = $this->getAddress()->getGroupedAllShippingRates();
 
         foreach ($currentRates as $code => $rates) {
             //prevent duplicate rates from non-SHQ carriers if enabled
@@ -120,30 +119,29 @@ class Service extends AbstractService
     /*
      * Request shipping rates for specified carrier
      */
-    public function reqeustShippingRates($cartId, $carrierCode, $carriergroupId, $addressData, $addressId = false)
+    public function reqeustShippingRates($cartId, $carrierCode, $carriergroupId)
     {
-        $address = $this->getAddress($cartId, $addressId);
-        $address->addData($addressData);
+        $address = $this->getAddress();
         $rateFound = $address->requestShippingRates();
         $rates = $address->getGroupedAllShippingRates();
-        $output = [];
+
         foreach ($rates as $carrierRates) {
             foreach ($carrierRates as $rate) {
                 $rateObject = $this->converter->modelToDataObject(
                     $rate,
-                    $this->getQuote($cartId)->getQuoteCurrencyCode()
+                    $this->getQuote()->getQuoteCurrencyCode()
                 );
                 //mimicking output format from serviceOutputProcessor->process(... (API stuff)
                 $oneRate = ['carrier_code' => $rateObject->getCarrierCode(),
-                            'method_code' => $rateObject->getMethodCode(),
-                            'carrier_title' => $rateObject->getCarrierTitle(),
-                            'method_title' => $rateObject->getMethodTitle(),
-                            'amount'    => $rateObject->getAmount(),
-                            'base_amount' => $rateObject->getBaseAmount(),
-                            'available' => $rateObject->getAvailable(),
-                            'error_message' => $rateObject->getErrorMessage(),
-                            'price_excl_tax' => $rateObject->getPriceExclTax(),
-                            'price_incl_tax' => $rateObject->getPriceInclTax()];
+                    'method_code' => $rateObject->getMethodCode(),
+                    'carrier_title' => $rateObject->getCarrierTitle(),
+                    'method_title' => $rateObject->getMethodTitle(),
+                    'amount'    => $rateObject->getAmount(),
+                    'base_amount' => $rateObject->getBaseAmount(),
+                    'available' => $rateObject->getAvailable(),
+                    'error_message' => $rateObject->getErrorMessage(),
+                    'price_excl_tax' => $rateObject->getPriceExclTax(),
+                    'price_incl_tax' => $rateObject->getPriceInclTax()];
 
                 $output[] = $oneRate;
             }
@@ -156,57 +154,22 @@ class Service extends AbstractService
      */
     public function cleanDownSelectedData()
     {
-        $requestData = $this->checkoutSession->getShipperhqData();
+        $requestData = $this->adminSession->getShipperhqData();
         unset($requestData['checkout_selections']);
-        $this->checkoutSession->setShipperhqData($requestData);
+        $this->adminSession->setShipperhqData($requestData);
     }
 
-    protected function saveShippingAddress($cartId, $addressId)
-    {
-        $address = $this->getAddress($cartId, $addressId);
-        $region = $address->getRegion();
-        if ($region !== null && $region instanceof \Magento\Customer\Model\Data\Region) {
-            $regionString = $region->getRegion();
-            $address->setRegion($regionString);
-        }
-        try {
-            $address->save();
-        } catch (\Exception $e) {
-            $this->shipperLogger->postCritical(
-                'Shipperhq_Shipper',
-                'Exception raised whilst saving shipping address',
-                $e->getMessage()
-            );
-        }
-    }
-
-    protected function getAddress($cartId, $addressId = false)
+    protected function getAddress()
     {
 
         if ($this->address === null) {
-            if (!$this->quote) {
-                $this->quote = $this->getQuote($cartId);
-            }
-            $this->address = $this->quote->getShippingAddress();
+            $this->address = $this->quote->getQuote()->getShippingAddress();
         }
-        //TODO multiaddress checkout support
-//        if($addressId) {
-//            $allShipAddress = $this->quote->getAllShippingAddresses();
-//            foreach($allShipAddress as $shippingAddress) {
-//                if($shippingAddress->getId() == $addressId) {
-//                    $this->_address = $shippingAddress;
-//                }
-//            }
-//        }
-
         return $this->address;
     }
 
-    protected function getQuote($cartId)
+    protected function getQuote()
     {
-        if (!$this->quote) {
-            $this->quote = $this->quoteRepository->getActive($cartId);
-        }
-        return $this->quote;
+        return $this->quote->getQuote();
     }
 }

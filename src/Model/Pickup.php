@@ -51,10 +51,10 @@ class Pickup extends BasePickup
     /*
      * @param DateTime\TimezoneInterface $localeDate
      */
-    public function __construct(DateTime\TimezoneInterface $localeDate, Checkout\Service $checkoutService)
+    public function __construct(DateTime\TimezoneInterface $localeDate, Checkout\Service $checkoutService, AdminOrder\Service $adminService)
     {
         $this->localeDate = $localeDate;
-        parent::__construct($checkoutService);
+        parent::__construct($checkoutService, $adminService);
     }
 
     public function processPickupDetails($carrierRate, $carrierGroupDetail)

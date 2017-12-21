@@ -62,6 +62,10 @@ class Service extends AbstractService
      * @var \ShipperHQ\Shipper\Helper\LogAssist
      */
     private $shipperLogger;
+    /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
+    protected $quoteRepository;
 
     protected $address;
 
@@ -76,12 +80,14 @@ class Service extends AbstractService
         \Magento\Backend\Model\Session\Quote $quote,
         \Magento\Backend\Model\Session $adminSession,
         \Magento\Quote\Model\Cart\ShippingMethodConverter $converter,
-        \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
+        \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger,
+        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
     ) {
         $this->quote = $quote;
         $this->adminSession = $adminSession;
         $this->converter = $converter;
         $this->shipperLogger = $shipperLogger;
+        $this->quoteRepository = $quoteRepository;
     }
 
     /*
@@ -99,7 +105,7 @@ class Service extends AbstractService
      */
     public function cleanDownRates($cartId, $carrierCode, $carriergroupId)
     {
-        if(is_null($cartId)) {
+        if (is_null($cartId)) {
             return;
         }
         $currentRates = $this->getAddress()->getGroupedAllShippingRates();
@@ -124,6 +130,7 @@ class Service extends AbstractService
         $address = $this->getAddress();
         $rateFound = $address->requestShippingRates();
         $rates = $address->getGroupedAllShippingRates();
+        $this->quoteRepository->save($this->quote->getQuote());
 
         foreach ($rates as $carrierRates) {
             foreach ($carrierRates as $rate) {

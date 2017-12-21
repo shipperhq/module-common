@@ -65,7 +65,7 @@ class ShippingMethodManagementPlugin
     }
 
     /**
-     *Persist shipping address details so they are available when rates re-requested
+     * Persist shipping address details so they are available when rates re-requested
      *
      * @param \Magento\Quote\Model\ShippingMethodManagement $subject
      * @param callable $proceed
@@ -74,16 +74,20 @@ class ShippingMethodManagementPlugin
      * @return \Magento\Quote\Api\Data\ShippingMethodInterface[]
      *
      */
-    public function aroundEstimateByExtendedAddress(\Magento\Quote\Model\ShippingMethodManagement $subject, $proceed,
-                                                    $cartId, \Magento\Quote\Api\Data\AddressInterface $address)
-    {
+    public function aroundEstimateByExtendedAddress(
+        \Magento\Quote\Model\ShippingMethodManagement $subject,
+        $proceed,
+        $cartId,
+        \Magento\Quote\Api\Data\AddressInterface $address
+    ) {
+    
         $result = $proceed($cartId, $address);
         $this->saveShippingAddress($cartId);
         return $result;
     }
 
     /**
-     *Persist shipping address details so they are available when rates re-requested
+     * Persist shipping address details so they are available when rates re-requested
      *
      * @param \Magento\Quote\Model\ShippingMethodManagement $subject
      * @param callable $proceed
@@ -92,9 +96,13 @@ class ShippingMethodManagementPlugin
      * @return \Magento\Quote\Api\Data\ShippingMethodInterface[]
      *
      */
-    public function aroundEstimateByAddress(\Magento\Quote\Model\ShippingMethodManagement $subject, $proceed,
-                                            $cartId, \Magento\Quote\Api\Data\EstimateAddressInterface $address)
-    {
+    public function aroundEstimateByAddress(
+        \Magento\Quote\Model\ShippingMethodManagement $subject,
+        $proceed,
+        $cartId,
+        \Magento\Quote\Api\Data\EstimateAddressInterface $address
+    ) {
+    
         $result = $proceed($cartId, $address);
         $this->saveShippingAddress($cartId);
         return $result;
@@ -105,17 +113,19 @@ class ShippingMethodManagementPlugin
         $quote = $this->quoteRepository->getActive($cartId);
         $address = $quote->getShippingAddress();
         $region = $address->getRegion();
-        if(!is_null($region) && $region instanceof \Magento\Customer\Model\Data\Region) {
+        if (!is_null($region) && $region instanceof \Magento\Customer\Model\Data\Region) {
             $regionString = $region->getRegion();
             $address->setRegion($regionString);
         }
         try {
             //SHQ16-1770 for guest checkout need to save address otherwise all rates aren't available on quote when re-requesting
             $address->save();
-        }
-        catch(\Exception $e) {
-            $this->shipperLogger->postCritical('Shipperhq_Shipper', 'Exception raised whilst saving shipping address',
-                $e->getMessage());
+        } catch (\Exception $e) {
+            $this->shipperLogger->postCritical(
+                'Shipperhq_Shipper',
+                'Exception raised whilst saving shipping address',
+                $e->getMessage()
+            );
         }
     }
 }

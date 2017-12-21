@@ -1,5 +1,13 @@
 # Change Log
 
+## [20.4.0](https://github.com/webshopapps/module-common/tree/20.4.0) (2017-12-12)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.3.0...20.4.0)
+
+**Merged pull requests:**
+
+- SHQ16-2456 ensure dispatch date saved to order is correct for calenda… [\#15](https://github.com/webshopapps/module-common/pull/15) ([wsagen](https://github.com/wsagen))
+- SHQ16-2432 code sniffer changes [\#14](https://github.com/webshopapps/module-common/pull/14) ([wsagen](https://github.com/wsagen))
+
 ## [20.3.0](https://github.com/webshopapps/module-common/tree/20.3.0) (2017-11-28)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.2.0...20.3.0)
 
@@ -15,17 +23,17 @@
 - SHQ16-2392 added comments and refactored unit tests, added tests for … [\#12](https://github.com/webshopapps/module-common/pull/12) ([wsagen](https://github.com/wsagen))
 
 ## [20.1.9](https://github.com/webshopapps/module-common/tree/20.1.9) (2017-10-12)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.7...20.1.9)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.8...20.1.9)
 
 **Merged pull requests:**
 
 - SHQ16-2078 add unit tests for time slot calculations [\#11](https://github.com/webshopapps/module-common/pull/11) ([wsagen](https://github.com/wsagen))
 
-## [20.1.7](https://github.com/webshopapps/module-common/tree/20.1.7) (2017-08-10)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.8...20.1.7)
-
 ## [20.1.8](https://github.com/webshopapps/module-common/tree/20.1.8) (2017-08-10)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.6...20.1.8)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.7...20.1.8)
+
+## [20.1.7](https://github.com/webshopapps/module-common/tree/20.1.7) (2017-08-10)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.6...20.1.7)
 
 **Merged pull requests:**
 

@@ -104,15 +104,10 @@ class Service extends AbstractService
             return;
         }
         $currentRates = $this->getAddress($cartId, $addressId)->getGroupedAllShippingRates();
-
         foreach ($currentRates as $code => $rates) {
-            //prevent duplicate rates from non-SHQ carriers if enabled
-            if ($code == $carrierCode || !strstr($code, 'shq')) {
-                foreach ($rates as $rate) {
-                    if ($carriergroupId == '' || $rate->getCarriergroupId() == $carriergroupId) {
-                        $rate->isDeleted(true);
-                    }
-                }
+            //SHQ18-57 removed comparison of code and carrier group before removing rates. Since all rates are now refreshed.
+            foreach ($rates as $rate) {
+                    $rate->isDeleted(true);
             }
         }
     }

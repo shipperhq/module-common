@@ -1,5 +1,13 @@
 # Change Log
 
+## [20.5.0](https://github.com/webshopapps/module-common/tree/20.5.0) (2018-03-15)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.4.1...20.5.0)
+
+**Merged pull requests:**
+
+- SHQ18-104 made date tests dynamically calculate dates for today and t… [\#18](https://github.com/webshopapps/module-common/pull/18) ([TravisBernard](https://github.com/TravisBernard))
+- SHQ18-104 Handle timeslots ending at midnight [\#17](https://github.com/webshopapps/module-common/pull/17) ([TravisBernard](https://github.com/TravisBernard))
+
 ## [20.4.1](https://github.com/webshopapps/module-common/tree/20.4.1) (2018-03-07)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.4.0...20.4.1)
 

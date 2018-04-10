@@ -27,10 +27,12 @@
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @author ShipperHQ Team sales@shipperhq.com
  */
+
 /**
  * Copyright © 2015 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace ShipperHQ\Common\Model\Checkout;
 
 use ShipperHQ\Lib\Checkout\AbstractService;
@@ -95,8 +97,15 @@ class Service extends AbstractService
         $requestData['checkout_selections'] = $data;
         $this->checkoutSession->setShipperhqData($requestData);
     }
-    /*
+
+    /**
      * Remove carrier shipping rates before re-requesting
+     *
+     * @param $cartId
+     * @param $carrierCode
+     * @param $carriergroupId
+     * @param bool $addressId
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function cleanDownRates($cartId, $carrierCode, $carriergroupId, $addressId = false)
     {
@@ -104,16 +113,30 @@ class Service extends AbstractService
             return;
         }
         $currentRates = $this->getAddress($cartId, $addressId)->getGroupedAllShippingRates();
+
         foreach ($currentRates as $code => $rates) {
-            //SHQ18-57 removed comparison of code and carrier group before removing rates. Since all rates are now refreshed.
-            foreach ($rates as $rate) {
-                    $rate->isDeleted(true);
+            //prevent duplicate rates from non-SHQ carriers if enabled
+            if ($code == $carrierCode || !strstr($code, 'shq')) {
+                foreach ($rates as $rate) {
+                    if ($carriergroupId == '' || $rate->getCarriergroupId() == $carriergroupId) {
+                        $rate->isDeleted(true);
+                    }
+                }
             }
         }
     }
 
-    /*
+    /**
      * Request shipping rates for specified carrier
+     *
+     * @param $cartId
+     * @param $carrierCode
+     * @param $carriergroupId
+     * @param $addressData
+     * @param bool $addressId
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function reqeustShippingRates($cartId, $carrierCode, $carriergroupId, $addressData, $addressId = false)
     {
@@ -129,16 +152,18 @@ class Service extends AbstractService
                     $this->getQuote($cartId)->getQuoteCurrencyCode()
                 );
                 //mimicking output format from serviceOutputProcessor->process(... (API stuff)
-                $oneRate = ['carrier_code' => $rateObject->getCarrierCode(),
-                            'method_code' => $rateObject->getMethodCode(),
-                            'carrier_title' => $rateObject->getCarrierTitle(),
-                            'method_title' => $rateObject->getMethodTitle(),
-                            'amount'    => $rateObject->getAmount(),
-                            'base_amount' => $rateObject->getBaseAmount(),
-                            'available' => $rateObject->getAvailable(),
-                            'error_message' => $rateObject->getErrorMessage(),
-                            'price_excl_tax' => $rateObject->getPriceExclTax(),
-                            'price_incl_tax' => $rateObject->getPriceInclTax()];
+                $oneRate = [
+                    'carrier_code' => $rateObject->getCarrierCode(),
+                    'method_code' => $rateObject->getMethodCode(),
+                    'carrier_title' => $rateObject->getCarrierTitle(),
+                    'method_title' => $rateObject->getMethodTitle(),
+                    'amount' => $rateObject->getAmount(),
+                    'base_amount' => $rateObject->getBaseAmount(),
+                    'available' => $rateObject->getAvailable(),
+                    'error_message' => $rateObject->getErrorMessage(),
+                    'price_excl_tax' => $rateObject->getPriceExclTax(),
+                    'price_incl_tax' => $rateObject->getPriceInclTax()
+                ];
 
                 $output[] = $oneRate;
             }
@@ -146,7 +171,7 @@ class Service extends AbstractService
         return $output;
     }
 
-    /*
+    /**
      * Removed cached data selected at checkout
      */
     public function cleanDownSelectedData()
@@ -156,6 +181,10 @@ class Service extends AbstractService
         $this->checkoutSession->setShipperhqData($requestData);
     }
 
+    /**
+     * @param $cartId
+     * @param $addressId
+     */
     protected function saveShippingAddress($cartId, $addressId)
     {
         $address = $this->getAddress($cartId, $addressId);
@@ -175,6 +204,12 @@ class Service extends AbstractService
         }
     }
 
+    /**
+     * @param $cartId
+     * @param bool $addressId
+     * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     protected function getAddress($cartId, $addressId = false)
     {
 

@@ -78,8 +78,14 @@ class Service extends AbstractService
         $this->shipperLogger = $shipperLogger;
     }
 
-    /*
+    /**
      * Remove carrier shipping rates
+     *
+     * @param $address
+     * @param $carrierCode
+     * @param $carriergroupId
+     * @param bool $addressId
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function cleanDownRates($address, $carrierCode, $carriergroupId, $addressId = false)
     {

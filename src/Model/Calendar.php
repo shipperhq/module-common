@@ -27,10 +27,12 @@
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @author ShipperHQ Team sales@shipperhq.com
  */
+
 /**
  * Copyright © 2015 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace ShipperHQ\Common\Model;
 
 use ShipperHQ\Lib\Type\BaseCalendar;
@@ -51,17 +53,20 @@ class Calendar extends BaseCalendar
     /*
      * @param DateTime\TimezoneInterface $localeDate
      */
-    public function __construct(DateTime\TimezoneInterface $localeDate, Checkout\Service $checkoutService, AdminOrder\Service $adminService)
-    {
+    public function __construct(
+        DateTime\TimezoneInterface $localeDate,
+        Checkout\Service $checkoutService,
+        AdminOrder\Service $adminService
+    ) {
         $this->localeDate = $localeDate;
         parent::__construct($checkoutService, $adminService);
     }
 
     public function processCalendarDetails($carrierRate, $carrierGroupDetail)
     {
-         $calendarDetails = parent::processCalendarDetails($carrierRate, $carrierGroupDetail);
-         //transform for current locale
-         $calendarDetails['start'] = $this->localeDate->date($calendarDetails['start'], null, true)->getTimestamp();
-         return $calendarDetails;
+        $calendarDetails = parent::processCalendarDetails($carrierRate, $carrierGroupDetail);
+        //transform for current locale
+        $calendarDetails['start'] = $this->localeDate->date($calendarDetails['start'], null, true)->getTimestamp();
+        return $calendarDetails;
     }
 }

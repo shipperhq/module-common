@@ -90,8 +90,10 @@ class Service extends AbstractService
         $this->quoteRepository = $quoteRepository;
     }
 
-    /*
+    /**
      * Cache data selected at checkout for use in rate request
+     *
+     * @param $data
      */
     public function saveSelectedData($data)
     {
@@ -100,8 +102,13 @@ class Service extends AbstractService
         $requestData['checkout_selections'] = $data;
         $this->quote->setShipperhqData($requestData);
     }
-    /*
+
+    /**
      * Remove carrier shipping rates before re-requesting
+     *
+     * @param $cartId
+     * @param $carrierCode
+     * @param $carriergroupId
      */
     public function cleanDownRates($cartId, $carrierCode, $carriergroupId)
     {
@@ -122,8 +129,15 @@ class Service extends AbstractService
         }
     }
 
-    /*
+    /**
      * Request shipping rates for specified carrier
+     *
+     * @param $cartId
+     * @param $carrierCode
+     * @param $carriergroupId
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function reqeustShippingRates($cartId, $carrierCode, $carriergroupId)
     {
@@ -156,7 +170,7 @@ class Service extends AbstractService
         return $output;
     }
 
-    /*
+    /**
      * Removed cached data selected at checkout
      */
     public function cleanDownSelectedData()
@@ -166,6 +180,9 @@ class Service extends AbstractService
         $this->adminSession->setShipperhqData($requestData);
     }
 
+    /**
+     * @return \Magento\Quote\Model\Quote\Address
+     */
     protected function getAddress()
     {
 
@@ -175,6 +192,9 @@ class Service extends AbstractService
         return $this->address;
     }
 
+    /**
+     * @return \Magento\Quote\Model\Quote
+     */
     protected function getQuote()
     {
         return $this->quote->getQuote();

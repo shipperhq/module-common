@@ -27,10 +27,12 @@
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @author ShipperHQ Team sales@shipperhq.com
  */
+
 /**
  * Copyright © 2015 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace ShipperHQ\Common\Plugin\Quote;
 
 class ShippingMethodManagementPlugin
@@ -72,7 +74,7 @@ class ShippingMethodManagementPlugin
      * @param $cartId
      * @param \Magento\Quote\Api\Data\AddressInterface $address
      * @return \Magento\Quote\Api\Data\ShippingMethodInterface[]
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundEstimateByExtendedAddress(
         \Magento\Quote\Model\ShippingMethodManagement $subject,
@@ -80,7 +82,7 @@ class ShippingMethodManagementPlugin
         $cartId,
         \Magento\Quote\Api\Data\AddressInterface $address
     ) {
-    
+
         $result = $proceed($cartId, $address);
         $this->saveShippingAddress($cartId);
         return $result;
@@ -94,7 +96,7 @@ class ShippingMethodManagementPlugin
      * @param $cartId
      * @param \Magento\Quote\Api\Data\EstimateAddressInterface $address
      * @return \Magento\Quote\Api\Data\ShippingMethodInterface[]
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundEstimateByAddress(
         \Magento\Quote\Model\ShippingMethodManagement $subject,
@@ -102,7 +104,6 @@ class ShippingMethodManagementPlugin
         $cartId,
         \Magento\Quote\Api\Data\EstimateAddressInterface $address
     ) {
-    
         $result = $proceed($cartId, $address);
         $this->saveShippingAddress($cartId);
         return $result;
@@ -118,7 +119,8 @@ class ShippingMethodManagementPlugin
             $address->setRegion($regionString);
         }
         try {
-            //SHQ16-1770 for guest checkout need to save address otherwise all rates aren't available on quote when re-requesting
+            //SHQ16-1770 for guest checkout need to save address otherwise all rates aren't available on
+            // quote when re-requesting
             $address->save();
         } catch (\Exception $e) {
             $this->shipperLogger->postCritical(

@@ -1,5 +1,8 @@
 # Change Log
 
+## [20.6.0](https://github.com/webshopapps/module-common/tree/20.6.0) (2018-04-11)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.5.1...20.6.0)
+
 ## [20.5.1](https://github.com/webshopapps/module-common/tree/20.5.1) (2018-04-09)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.5.0...20.5.1)
 

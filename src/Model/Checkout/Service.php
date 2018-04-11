@@ -212,7 +212,6 @@ class Service extends AbstractService
      */
     protected function getAddress($cartId, $addressId = false)
     {
-
         if ($this->address === null) {
             if (!$this->quote) {
                 $this->quote = $this->getQuote($cartId);
@@ -228,7 +227,6 @@ class Service extends AbstractService
 //                }
 //            }
 //        }
-
         return $this->address;
     }
 

@@ -174,10 +174,18 @@ class Service extends AbstractService
     /**
      * Removed cached data selected at checkout
      */
-    public function cleanDownSelectedData()
+    public function cleanDownSelectedData($selections = [])
     {
         $requestData = $this->checkoutSession->getShipperhqData();
-        unset($requestData['checkout_selections']);
+        if (empty($selections)) {
+            unset($requestData['checkout_selections']);
+        } else {
+            $checkoutSelections = $requestData['checkout_selections'];
+            foreach ($selections as $dataName) {
+                $setFunction = 'set' .$dataName;
+                call_user_func(array($checkoutSelections,$setFunction), null);
+            }
+        }
         $this->checkoutSession->setShipperhqData($requestData);
     }
 

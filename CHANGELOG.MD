@@ -1,5 +1,12 @@
 # Change Log
 
+## [20.6.2](https://github.com/webshopapps/module-common/tree/20.6.2) (2018-04-13)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.6.1...20.6.2)
+
+**Merged pull requests:**
+
+- SHQ18-196 Add missing composer version [\#21](https://github.com/webshopapps/module-common/pull/21) ([TravisBernard](https://github.com/TravisBernard))
+
 ## [20.6.1](https://github.com/webshopapps/module-common/tree/20.6.1) (2018-04-12)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.6.0...20.6.1)
 

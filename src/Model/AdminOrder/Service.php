@@ -142,7 +142,8 @@ class Service extends AbstractService
     public function reqeustShippingRates($cartId, $carrierCode, $carriergroupId)
     {
         $address = $this->getAddress();
-        $rateFound = $address->requestShippingRates();
+        $address->setCollectShippingRates(true)
+            ->collectShippingRates();
         $rates = $address->getGroupedAllShippingRates();
         $this->quoteRepository->save($this->quote->getQuote());
 

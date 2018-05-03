@@ -141,8 +141,9 @@ class Service extends AbstractService
     public function reqeustShippingRates($cartId, $carrierCode, $carriergroupId, $addressData, $addressId = false)
     {
         $address = $this->getAddress($cartId, $addressId);
-        $address->addData($addressData);
-        $rateFound = $address->requestShippingRates();
+        $address->addData($addressData)
+            ->setCollectShippingRates(true)
+            ->collectShippingRates();
         $rates = $address->getGroupedAllShippingRates();
         $output = [];
         foreach ($rates as $carrierRates) {

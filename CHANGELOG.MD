@@ -1,5 +1,12 @@
 # Change Log
 
+## [20.6.3](https://github.com/webshopapps/module-common/tree/20.6.3) (2018-05-03)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.6.2...20.6.3)
+
+**Merged pull requests:**
+
+- SHQ18-206 Fixed duplicate rates when changing date/accessorials [\#22](https://github.com/webshopapps/module-common/pull/22) ([TravisBernard](https://github.com/TravisBernard))
+
 ## [20.6.2](https://github.com/webshopapps/module-common/tree/20.6.2) (2018-04-13)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.6.1...20.6.2)
 
@@ -98,13 +105,13 @@
 - SHQ16-2004 admin shipping [\#3](https://github.com/webshopapps/module-common/pull/3) ([wsagen](https://github.com/wsagen))
 
 ## [20.1.4](https://github.com/webshopapps/module-common/tree/20.1.4) (2017-02-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.2...20.1.4)
-
-## [20.1.2](https://github.com/webshopapps/module-common/tree/20.1.2) (2016-12-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.3...20.1.2)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.3...20.1.4)
 
 ## [20.1.3](https://github.com/webshopapps/module-common/tree/20.1.3) (2016-12-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.1...20.1.3)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.2...20.1.3)
+
+## [20.1.2](https://github.com/webshopapps/module-common/tree/20.1.2) (2016-12-14)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.1...20.1.2)
 
 ## [20.1.1](https://github.com/webshopapps/module-common/tree/20.1.1) (2016-11-09)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.0...20.1.1)

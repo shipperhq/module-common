@@ -1,5 +1,12 @@
 # Change Log
 
+## [20.6.4](https://github.com/webshopapps/module-common/tree/20.6.4) (2018-05-16)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.6.3...20.6.4)
+
+**Merged pull requests:**
+
+-  SHQ18-240 check for checkout\_selections before accessing [\#23](https://github.com/webshopapps/module-common/pull/23) ([wsagen](https://github.com/wsagen))
+
 ## [20.6.3](https://github.com/webshopapps/module-common/tree/20.6.3) (2018-05-03)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.6.2...20.6.3)
 

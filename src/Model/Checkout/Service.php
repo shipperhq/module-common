@@ -180,7 +180,7 @@ class Service extends AbstractService
         $requestData = $this->checkoutSession->getShipperhqData();
         if (empty($selections)) {
             unset($requestData['checkout_selections']);
-        } else {
+        } else if (isset($requestData['checkout_selections'])) {
             $checkoutSelections = $requestData['checkout_selections'];
             foreach ($selections as $dataName) {
                 $setFunction = 'set' .$dataName;

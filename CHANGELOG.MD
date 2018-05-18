@@ -1,5 +1,8 @@
 # Change Log
 
+## [20.6.5](https://github.com/webshopapps/module-common/tree/20.6.5) (2018-05-18)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.6.4...20.6.5)
+
 ## [20.6.4](https://github.com/webshopapps/module-common/tree/20.6.4) (2018-05-16)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.6.3...20.6.4)
 
@@ -112,13 +115,13 @@
 - SHQ16-2004 admin shipping [\#3](https://github.com/webshopapps/module-common/pull/3) ([wsagen](https://github.com/wsagen))
 
 ## [20.1.4](https://github.com/webshopapps/module-common/tree/20.1.4) (2017-02-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.3...20.1.4)
-
-## [20.1.3](https://github.com/webshopapps/module-common/tree/20.1.3) (2016-12-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.2...20.1.3)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.2...20.1.4)
 
 ## [20.1.2](https://github.com/webshopapps/module-common/tree/20.1.2) (2016-12-14)
-[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.1...20.1.2)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.3...20.1.2)
+
+## [20.1.3](https://github.com/webshopapps/module-common/tree/20.1.3) (2016-12-14)
+[Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.1...20.1.3)
 
 ## [20.1.1](https://github.com/webshopapps/module-common/tree/20.1.1) (2016-11-09)
 [Full Changelog](https://github.com/webshopapps/module-common/compare/20.1.0...20.1.1)

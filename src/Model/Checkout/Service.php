@@ -93,8 +93,20 @@ class Service extends AbstractService
      */
     public function saveSelectedData($data)
     {
+        //SHQ18-277 retain selections on existing checkout selections object if it exists
         $requestData = $this->checkoutSession->getShipperhqData();
-        $requestData['checkout_selections'] = $data;
+        if (isset($requestData['checkout_selections']) && is_object($requestData['checkout_selections'])) {
+            $checkoutSelections = $requestData['checkout_selections'];
+        }
+        else {
+            $checkoutSelections = new \ShipperHQ\Lib\Rate\CarrierSelections;
+        }
+
+        foreach ($data as $dataName => $value) {
+            $setFunction = 'set' .$dataName;
+            call_user_func(array($checkoutSelections,$setFunction), $value);
+        }
+        $requestData['checkout_selections'] = $checkoutSelections;
         $this->checkoutSession->setShipperhqData($requestData);
     }
 

@@ -3,3 +3,7 @@
 SHQ18-277 retain existing selectiosn on checkout selections object
 
 
+## 20.8.0 (2019-03-14)
+SHQ18-1651 Update dependencies in composer.json
+
+

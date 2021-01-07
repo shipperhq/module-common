@@ -11,3 +11,7 @@ SHQ18-1651 Update dependencies in composer.json
 SHQ18-2869 Process rate response as array
 
 
+## 20.9.1 (2021-01-07)
+INFRA-208 updated composer json from uppercase to lowercase
+
+

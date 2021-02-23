@@ -97,15 +97,27 @@ class Service extends AbstractService
         $requestData = $this->checkoutSession->getShipperhqData();
         if (isset($requestData['checkout_selections']) && is_object($requestData['checkout_selections'])) {
             $checkoutSelections = $requestData['checkout_selections'];
+        } else {
+            $checkoutSelections = new \ShipperHQ\Lib\Rate\CarrierSelections();
         }
-        else {
-            $checkoutSelections = new \ShipperHQ\Lib\Rate\CarrierSelections;
+
+        // MNB-1003 We don't want to send the carrier code or carrier ID for merged/rate shopped rates
+        $isMergedRates = false;
+
+        if (array_key_exists('CarrierCode', $data) &&
+            ($data['CarrierCode'] == 'multicarrier' || $data['CarrierCode'] == 'shqshared')) {
+            $isMergedRates = true;
         }
 
         foreach ($data as $dataName => $value) {
-            $setFunction = 'set' .$dataName;
-            call_user_func(array($checkoutSelections,$setFunction), $value);
+            if ($isMergedRates && $dataName == 'CarrierCode' || $dataName == 'CarrierId') {
+                continue;
+            }
+
+            $setFunction = 'set' . $dataName;
+            call_user_func([$checkoutSelections,$setFunction], $value);
         }
+
         $requestData['checkout_selections'] = $checkoutSelections;
         $this->checkoutSession->setShipperhqData($requestData);
     }
@@ -192,11 +204,11 @@ class Service extends AbstractService
         $requestData = $this->checkoutSession->getShipperhqData();
         if (empty($selections)) {
             unset($requestData['checkout_selections']);
-        } else if (isset($requestData['checkout_selections'])) {
+        } elseif (isset($requestData['checkout_selections'])) {
             $checkoutSelections = $requestData['checkout_selections'];
             foreach ($selections as $dataName) {
-                $setFunction = 'set' .$dataName;
-                call_user_func(array($checkoutSelections,$setFunction), null);
+                $setFunction = 'set' . $dataName;
+                call_user_func([$checkoutSelections,$setFunction], null);
             }
         }
         $this->checkoutSession->setShipperhqData($requestData);

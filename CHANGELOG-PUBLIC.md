@@ -15,3 +15,7 @@ SHQ18-2869 Process rate response as array
 INFRA-208 updated composer json from uppercase to lowercase
 
 
+## 20.9.2 (2021-02-23)
+MNB-1003 Fix for rate shopped accessorials on LTL methods
+
+

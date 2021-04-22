@@ -19,3 +19,7 @@ INFRA-208 updated composer json from uppercase to lowercase
 MNB-1003 Fix for rate shopped accessorials on LTL methods
 
 
+## 20.9.3 (2021-04-22)
+MNB-1204 Fix issue around date select requesting rates for all carriers and errors showing when shouldnt
+
+

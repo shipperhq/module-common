@@ -110,7 +110,7 @@ class Service extends AbstractService
         }
 
         foreach ($data as $dataName => $value) {
-            if ($isMergedRates && $dataName == 'CarrierCode' || $dataName == 'CarrierId') {
+            if ($isMergedRates && ($dataName == 'CarrierCode' || $dataName == 'CarrierId')) {
                 continue;
             }
 

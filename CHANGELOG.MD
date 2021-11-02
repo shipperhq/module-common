@@ -23,3 +23,7 @@ MNB-1003 Fix for rate shopped accessorials on LTL methods
 MNB-1204 Fix issue around date select requesting rates for all carriers and errors showing when shouldnt
 
 
+## 20.9.4 (2021-11-02)
+MNB-1797 Fix unit tests to work with Magento 2.3+
+
+

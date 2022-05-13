@@ -27,3 +27,7 @@ MNB-1204 Fix issue around date select requesting rates for all carriers and erro
 MNB-1797 Fix unit tests to work with Magento 2.3+
 
 
+## 20.10.0 (2022-05-13)
+MND-2430 M2.4.4 compatibility
+
+

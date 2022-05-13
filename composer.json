@@ -2,7 +2,7 @@
     "name": "shipperhq/module-common",
     "description": "ShipperHQ Common",
     "type": "magento2-module",
-    "version": "20.9.4",
+    "version": "20.10.0",
     "license": [
         "OSL-3.0",
         "AFL-3.0"

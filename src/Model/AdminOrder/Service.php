@@ -131,7 +131,7 @@ class Service extends AbstractService
 
         foreach ($currentRates as $code => $rates) {
             //prevent duplicate rates from non-SHQ carriers if enabled
-            if ($code == $carrierCode || !strstr($code, 'shq')) {
+            if ($code == $carrierCode || !strstr((string) $code, 'shq')) {
                 foreach ($rates as $rate) {
                     if ($carriergroupId == '' || $rate->getCarriergroupId() == $carriergroupId) {
                         $rate->isDeleted(true);

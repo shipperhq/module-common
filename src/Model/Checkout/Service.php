@@ -1,41 +1,23 @@
 <?php
 /**
- *
  * ShipperHQ
  *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade Magento to newer
- * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
- *
- * Shipper HQ Shipping
- *
  * @category ShipperHQ
- * @package ShipperHQ_Common
- * @copyright Copyright (c) 2015 Zowta LLC (http://www.ShipperHQ.com)
+ * @package ShipperHQ\Common
+ * @copyright Copyright (c) 2015 Zowta LTD and Zowta LLC (http://www.ShipperHQ.com)
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @author ShipperHQ Team sales@shipperhq.com
  */
 
-/**
- * Copyright © 2015 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
 
 namespace ShipperHQ\Common\Model\Checkout;
 
+use Magento\Checkout\Model\Session;
+use Magento\Customer\Model\Data\Region;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Quote\Model\Cart\ShippingMethodConverter;
 use ShipperHQ\Lib\Checkout\AbstractService;
+use ShipperHQ\Shipper\Helper\LogAssist;
 
 /**
  * Class Service
@@ -45,24 +27,24 @@ use ShipperHQ\Lib\Checkout\AbstractService;
 class Service extends AbstractService
 {
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var Session
      */
     protected $checkoutSession;
 
     /**
      * Quote repository.
      *
-     * @var \Magento\Quote\Api\CartRepositoryInterface
+     * @var CartRepositoryInterface
      */
     protected $quoteRepository;
     /**
      * Shipping method converter
      *
-     * @var \Magento\Quote\Model\Cart\ShippingMethodConverter
+     * @var ShippingMethodConverter
      */
     protected $converter;
     /**
-     * @var \ShipperHQ\Shipper\Helper\LogAssist
+     * @var LogAssist
      */
     private $shipperLogger;
 
@@ -70,18 +52,19 @@ class Service extends AbstractService
     protected $quote;
 
     /**
-     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Quote\Model\Cart\ShippingMethodConverter $converter
-     * @param \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
+     * @param CartRepositoryInterface $quoteRepository
+     * @param Session $checkoutSession
+     * @param ShippingMethodConverter $converter
+     * @param LogAssist $shipperLogger
      * @codeCoverageIgnore
      */
     public function __construct(
-        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Magento\Checkout\Model\Session $checkoutSession,
-        \Magento\Quote\Model\Cart\ShippingMethodConverter $converter,
-        \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
-    ) {
+        CartRepositoryInterface $quoteRepository,
+        Session                 $checkoutSession,
+        ShippingMethodConverter $converter,
+        LogAssist               $shipperLogger
+    )
+    {
         $this->quoteRepository = $quoteRepository;
         $this->checkoutSession = $checkoutSession;
         $this->converter = $converter;
@@ -93,7 +76,7 @@ class Service extends AbstractService
      */
     public function saveSelectedData($data)
     {
-        //SHQ18-277 retain selections on existing checkout selections object if it exists
+        // SHQ18-277 retain selections on existing checkout selections object if it exists
         $requestData = $this->checkoutSession->getShipperhqData();
         if (isset($requestData['checkout_selections']) && is_object($requestData['checkout_selections'])) {
             $checkoutSelections = $requestData['checkout_selections'];
@@ -115,7 +98,7 @@ class Service extends AbstractService
             }
 
             $setFunction = 'set' . $dataName;
-            call_user_func([$checkoutSelections,$setFunction], $value);
+            call_user_func([$checkoutSelections, $setFunction], $value);
         }
 
         $requestData['checkout_selections'] = $checkoutSelections;
@@ -139,8 +122,8 @@ class Service extends AbstractService
         $currentRates = $this->getAddress($cartId, $addressId)->getGroupedAllShippingRates();
 
         foreach ($currentRates as $code => $rates) {
-            //prevent duplicate rates from non-SHQ carriers if enabled
-            if ($code == $carrierCode || !strstr((string) $code, 'shq')) {
+            // Prevent duplicate rates from non-SHQ carriers if enabled
+            if ($code == $carrierCode || !strstr((string)$code, 'shq')) {
                 foreach ($rates as $rate) {
                     if ($carriergroupId == '' || $rate->getCarriergroupId() == $carriergroupId) {
                         $rate->isDeleted(true);
@@ -176,7 +159,7 @@ class Service extends AbstractService
                     $rate,
                     $this->getQuote($cartId)->getQuoteCurrencyCode()
                 );
-                //mimicking output format from serviceOutputProcessor->process(... (API stuff)
+                // Mimicking output format from serviceOutputProcessor->process(... (API stuff)
                 $oneRate = [
                     'carrier_code' => $rateObject->getCarrierCode(),
                     'method_code' => $rateObject->getMethodCode(),
@@ -208,7 +191,7 @@ class Service extends AbstractService
             $checkoutSelections = $requestData['checkout_selections'];
             foreach ($selections as $dataName) {
                 $setFunction = 'set' . $dataName;
-                call_user_func([$checkoutSelections,$setFunction], null);
+                call_user_func([$checkoutSelections, $setFunction], null);
             }
         }
         $this->checkoutSession->setShipperhqData($requestData);
@@ -222,7 +205,7 @@ class Service extends AbstractService
     {
         $address = $this->getAddress($cartId, $addressId);
         $region = $address->getRegion();
-        if ($region !== null && $region instanceof \Magento\Customer\Model\Data\Region) {
+        if ($region !== null && $region instanceof Region) {
             $regionString = $region->getRegion();
             $address->setRegion($regionString);
         }
@@ -251,7 +234,7 @@ class Service extends AbstractService
             }
             $this->address = $this->quote->getShippingAddress();
         }
-        //TODO multiaddress checkout support
+        // TODO multiaddress checkout support
 //        if($addressId) {
 //            $allShipAddress = $this->quote->getAllShippingAddresses();
 //            foreach($allShipAddress as $shippingAddress) {

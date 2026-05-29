@@ -28,6 +28,10 @@ MNB-1797 Fix unit tests to work with Magento 2.3+
 
 
 ## 20.10.0 (2022-05-13)
-MND-2430 M2.4.4 compatibility
+MNB-2430 M2.4.4 compatibility
+
+
+## 20.10.1 (2026-05-29)
+ENG26-26 Modernising copyrights and docs
 
 

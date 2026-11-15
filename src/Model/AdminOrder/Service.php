@@ -136,6 +136,7 @@ class Service extends AbstractService
         $rates = $address->getGroupedAllShippingRates();
         $this->quoteRepository->save($this->quote->getQuote());
 
+        $output = [];
         foreach ($rates as $carrierRates) {
             foreach ($carrierRates as $rate) {
                 $rateObject = $this->converter->modelToDataObject(

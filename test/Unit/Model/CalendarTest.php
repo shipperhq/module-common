@@ -9,17 +9,27 @@
 
 namespace ShipperHQ\Common\Test\Unit\Model\Calendar;
 
-use Fooman\PhpunitBridge\BaseUnitTestCase;
+use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 
-class CalendarTest extends BaseUnitTestCase
+class CalendarTest extends TestCase
 {
     /**
-     * @var \ShipperHQ\Shipper\Model\Backend\Config\Source\EnvironmentScope
+     * @var \ShipperHQ\Common\Model\Calendar
      */
     protected $model;
 
     protected $localeDate;
+
+    /**
+     * @var \ShipperHQ\Common\Model\Checkout\Service|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $checkoutServiceMock;
+
+    /**
+     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $localeDateMock;
 
     protected function setUp(): void
     {

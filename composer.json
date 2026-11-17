@@ -42,7 +42,11 @@
         "jakub-onderka/php-parallel-lint": "^0.9.2",
         "jakub-onderka/php-console-highlighter": "^0.3.2",
         "symfony/dependency-injection": ">3.4.26",
-        "fooman/magento2-phpunit-bridge": "^0.9.0"
+        "fooman/magento2-phpunit-bridge": "^0.9.0",
+        "magento/magento-coding-standard": "^41",
+        "phpstan/phpstan": "^2.1",
+        "bitexpert/phpstan-magento": "^0.44",
+        "phpstan/extension-installer": "^1.4"
     },
     "autoload": {
         "files": [
@@ -55,6 +59,12 @@
     "autoload-dev": {
         "psr-4": {
             "ShipperHQ\\Common\\Test\\": "tests/unit/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
         }
     }
 }

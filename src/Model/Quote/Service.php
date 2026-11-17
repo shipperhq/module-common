@@ -32,7 +32,7 @@ class Service extends AbstractService
      */
     protected $converter;
     /**
-     * @var \ShipperHQ\Shipper\Helper\LogAssist
+     * @var \Psr\Log\LoggerInterface
      */
     private $shipperLogger;
 
@@ -42,13 +42,13 @@ class Service extends AbstractService
     /**
      * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
      * @param \Magento\Quote\Model\Cart\ShippingMethodConverter $converter
-     * @param \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
+     * @param \Psr\Log\LoggerInterface $shipperLogger
      * @codeCoverageIgnore
      */
     public function __construct(
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Quote\Model\Cart\ShippingMethodConverter $converter,
-        \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
+        \Psr\Log\LoggerInterface $shipperLogger
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->converter = $converter;

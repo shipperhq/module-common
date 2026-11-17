@@ -36,7 +36,7 @@ class Service extends AbstractService
      */
     protected $converter;
     /**
-     * @var \ShipperHQ\Shipper\Helper\LogAssist
+     * @var \Psr\Log\LoggerInterface
      */
     private $shipperLogger;
     /**
@@ -50,14 +50,14 @@ class Service extends AbstractService
      * @param \Magento\Backend\Model\Session\Quote $quote
      * @param \Magento\Backend\Model\Session $adminSession
      * @param \Magento\Quote\Model\Cart\ShippingMethodConverter $converter
-     * @param \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
+     * @param \Psr\Log\LoggerInterface $shipperLogger
      * @codeCoverageIgnore
      */
     public function __construct(
         \Magento\Backend\Model\Session\Quote $quote,
         \Magento\Backend\Model\Session $adminSession,
         \Magento\Quote\Model\Cart\ShippingMethodConverter $converter,
-        \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger,
+        \Psr\Log\LoggerInterface $shipperLogger,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
     ) {
         $this->quote = $quote;
@@ -136,6 +136,7 @@ class Service extends AbstractService
         $rates = $address->getGroupedAllShippingRates();
         $this->quoteRepository->save($this->quote->getQuote());
 
+        $output = [];
         foreach ($rates as $carrierRates) {
             foreach ($carrierRates as $rate) {
                 $rateObject = $this->converter->modelToDataObject(

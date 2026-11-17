@@ -17,7 +17,7 @@ use Magento\Customer\Model\Data\Region;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Cart\ShippingMethodConverter;
 use ShipperHQ\Lib\Checkout\AbstractService;
-use ShipperHQ\Shipper\Helper\LogAssist;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Service
@@ -44,7 +44,7 @@ class Service extends AbstractService
      */
     protected $converter;
     /**
-     * @var LogAssist
+     * @var LoggerInterface
      */
     private $shipperLogger;
 
@@ -55,14 +55,14 @@ class Service extends AbstractService
      * @param CartRepositoryInterface $quoteRepository
      * @param Session $checkoutSession
      * @param ShippingMethodConverter $converter
-     * @param LogAssist $shipperLogger
+     * @param LoggerInterface $shipperLogger
      * @codeCoverageIgnore
      */
     public function __construct(
         CartRepositoryInterface $quoteRepository,
         Session                 $checkoutSession,
         ShippingMethodConverter $converter,
-        LogAssist               $shipperLogger
+        LoggerInterface         $shipperLogger
     )
     {
         $this->quoteRepository = $quoteRepository;
@@ -212,10 +212,8 @@ class Service extends AbstractService
         try {
             $address->save();
         } catch (\Exception $e) {
-            $this->shipperLogger->postCritical(
-                'Shipperhq_Shipper',
-                'Exception raised whilst saving shipping address',
-                $e->getMessage()
+            $this->shipperLogger->critical(
+                'Shipperhq_Shipper-- Exception raised whilst saving shipping address-- ' . $e->getMessage()
             );
         }
     }

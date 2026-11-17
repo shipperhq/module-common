@@ -29,14 +29,14 @@ class ShippingMethodManagementPlugin
      */
     private $checkoutSession;
     /**
-     * @var \ShipperHQ\Shipper\Helper\LogAssist
+     * @var \Psr\Log\LoggerInterface
      */
     private $shipperLogger;
 
     public function __construct(
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \ShipperHQ\Shipper\Helper\LogAssist $shipperLogger
+        \Psr\Log\LoggerInterface $shipperLogger
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->checkoutSession = $checkoutSession;
@@ -100,10 +100,8 @@ class ShippingMethodManagementPlugin
             // quote when re-requesting
             $address->save();
         } catch (\Exception $e) {
-            $this->shipperLogger->postCritical(
-                'Shipperhq_Shipper',
-                'Exception raised whilst saving shipping address',
-                $e->getMessage()
+            $this->shipperLogger->critical(
+                'Shipperhq_Shipper-- Exception raised whilst saving shipping address-- ' . $e->getMessage()
             );
         }
     }
